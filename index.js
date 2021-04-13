@@ -1,14 +1,17 @@
 //modified by: Eloy Gonzalez
 //modified date: 04/08/2021
 //Include packages needed for this application
+//Call Multiple-Classes and inquirer for node prompt and fs for generating html
 const Engineer = require('./assets/lib/Engineer');
 const Intern = require('./assets/lib/Intern');
 const Manager = require('./assets/lib/Manager');
 const inquirer = require('inquirer');
 const fs = require('fs');
 
+//Declaring array for building Team HTML Cards
 var TeamMembersHTMLCard = [];
 
+//Declaring html to generate
 const generateHTML = (teamHtml) =>
   `<!DOCTYPE html>
   <html lang="en">
@@ -28,17 +31,18 @@ const generateHTML = (teamHtml) =>
               <div class="card-header pt-5  text-center bg-danger">
                <h1>My Team</h1>
               </div>
-  
-         
               <div class="container">
                   <div class="row">
+
                   ${teamHtml}
+
                   </div>
               </div>
           </div>
   </body>
   </html>`;
-//Create an array of questions for user input and  rename our destructured properties like so
+/*Create an array of questions for user input and  rename our destructured properties for manager.
+ I was going to do this for Engineer and Intern but ran out of time do to we two short day's to do this homework.*/
 const questionsManager = [
     "What is your team manager’s name?",
     "What is your employee Id?",
@@ -47,7 +51,7 @@ const questionsManager = [
  ];
  //rename our destructured properties like so
 const [managerName,managerEmployeeId, manageremail, managerOfficeNumber] = questionsManager 
-
+//Manager input prompt
 const getManager = () => {
 inquirer
   .prompt([
@@ -73,7 +77,7 @@ inquirer
     },
   ])
   .then((answers) => {
-      console.log(answers)
+    //Manager Card build and stored in array. Probably nicer ways to do this but this is how I figured it out.
     const manager = new Manager(answers.managerName,answers.managerEmployeeId,answers.manageremail,answers.managerOfficeNumber);
     console.log(manager.name);
     TeamMembersHTMLCard.push(
@@ -85,14 +89,13 @@ inquirer
     <div class="card-body">
         <ul class="list-group">
             <li class="list-group-item">ID:${manager.id}</li>
-            <li class="list-group-item">Email: <a href="mailto:${manager.email}?subject=Contact Engineer">${manager.email}</a></li>
-            <li class="list-group-item">Office number:${manager.officeNumber}</li>
+            <li class="list-group-item">Email: <a href="mailto:${manager.email}?subject=Contact Manager">${manager.email}</a></li>
+            <li class="list-group-item">Office number: ${manager.officeNumber}</li>
           </ul>
     </div>
     </div>`
     )
-    console.log(TeamMembersHTMLCard);
-    const htmlPageContent = generateHTML(TeamMembersHTMLCard);
+    //Next call to select if like enter a team
     SelectTeam();
 
   //  fs.writeFile('indexTeam.html', htmlPageContent, (err) =>
@@ -103,7 +106,9 @@ inquirer
 }
 
 const SelectTeam = () => {
-  inquirer
+   /* Next call to select if like enter a team. 
+   If yes prompt will ask if like enter Engineer or intern if not will stop and create index.html base array pended card nd build string to add to html */
+  inquirer 
     .prompt([
       {
         type: 'list',
@@ -116,16 +121,16 @@ const SelectTeam = () => {
     .then((answer) => {
       if(answer.finish == 'No')
       {
-        var teamHtml;
+        var teamHtml = "";
 
         for (let i of TeamMembersHTMLCard) {
           teamHtml += i ;
+
          }
          const htmlPageContent = generateHTML(teamHtml);
-         fs.writeFile('indexTeam.html', htmlPageContent, (err) =>
+         fs.writeFile('index.html', htmlPageContent, (err) =>
         err ? console.log(err) : console.log('Successfully created index.html!')
           );
-         console.log(teamHtml);
         console.log("Done...");
 
       }
@@ -133,11 +138,11 @@ const SelectTeam = () => {
       { 
         SelectTypeTeamMember();
       }
-
     });
   }
      
   const SelectTypeTeamMember = () => {
+    //Select team type
     inquirer
       .prompt([
         {
@@ -164,12 +169,11 @@ const SelectTeam = () => {
            default:
              // code block
          }
-
       });
- 
     }
 
     const selectEngineer= () => {
+      //select Engineer
       inquirer
       .prompt([
         {
@@ -193,10 +197,9 @@ const SelectTeam = () => {
           message: "What is engineer's GitHub username?",
         },
       ])
+        //Build  Engineer html Card
         .then((answer) => {
-          console.log(answer);
             const engineer = new Engineer(answer.engineerName,answer.engineerEmployeeId,answer.engineeremail,answer.engineerGitHubUsername);
-            console.log(answer.engineerName);
             TeamMembersHTMLCard.push(
             `<div class="card col-12 col-sm-4 mt-3">
             <div class="card-header bg-primary">
@@ -205,7 +208,7 @@ const SelectTeam = () => {
             </div>
             <div class="card-body">
                 <ul class="list-group">
-                    <li class="list-group-item">ID:3</li>
+                    <li class="list-group-item">ID: ${engineer.id}</li>
                     <li class="list-group-item">Email: <a href="mailto:${engineer.email}?subject=Contact Engineer">${engineer.email}</a></li>
                     <li class="list-group-item">Github: <a href="https://github.com/${engineer.githubusername}">${engineer.githubusername}</a> </li>
                   </ul>
@@ -216,6 +219,7 @@ const SelectTeam = () => {
       }
 
       const selectIntern= () => {
+        //Intern input
         inquirer
         .prompt([
           {
@@ -240,9 +244,8 @@ const SelectTeam = () => {
           },
         ])
           .then((answer) => {
-            console.log(answer);
+             //Build  Intern html Card
               const intern = new Intern(answer.internName,answer.internEmployeeId,answer.internemail,answer.internschool);
-              console.log(answer.internschool);
               TeamMembersHTMLCard.push(
               `<div class="card col-12 col-sm-4 mt-3">
               <div class="card-header bg-primary">
@@ -253,15 +256,13 @@ const SelectTeam = () => {
                   <ul class="list-group">
                       <li class="list-group-item">ID: ${intern.id}</li>
                       <li class="list-group-item">Email: <a href="mailto:${intern.email}?subject=Contact Intern">${intern.email}</a></li>
-                      <li class="list-group-item">School:${intern.school} </li>
+                      <li class="list-group-item">School: ${intern.school} </li>
                     </ul>
               </div>
           </div>`)
           SelectTeam();
           });
         }
-
+//start function but Manger Input prompt
 getManager();
 
-// Function call to initialize app
-//init();
