@@ -9,7 +9,7 @@ const fs = require('fs');
 
 var TeamMembersHTMLCard = [];
 
-const generateHTML = (TeamMembersHTMLCard) =>
+const generateHTML = (teamHtml) =>
   `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -32,7 +32,7 @@ const generateHTML = (TeamMembersHTMLCard) =>
          
               <div class="container">
                   <div class="row">
-                  ${TeamMembersHTMLCard[0]}
+                  ${teamHtml}
                   </div>
               </div>
           </div>
@@ -48,6 +48,7 @@ const questionsManager = [
  //rename our destructured properties like so
 const [managerName,managerEmployeeId, manageremail, managerOfficeNumber] = questionsManager 
 
+const getManager = () => {
 inquirer
   .prompt([
     {
@@ -92,18 +93,175 @@ inquirer
     )
     console.log(TeamMembersHTMLCard);
     const htmlPageContent = generateHTML(TeamMembersHTMLCard);
+    SelectTeam();
 
-    fs.writeFile('indexTeam.html', htmlPageContent, (err) =>
-      err ? console.log(err) : console.log('Successfully created index.html!')
-    );
-   // const htmlPageContent = generateHTML(answers);
+  //  fs.writeFile('indexTeam.html', htmlPageContent, (err) =>
+    //  err ? console.log(err) : console.log('Successfully created index.html!')
+ //   );
 
-   // fs.writeFile('index.html', htmlPageContent, (err) =>
-   //   err ? console.log(err) : console.log('Successfully created index.html!')
-   // );
   });
+}
 
+const SelectTeam = () => {
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+         message: 'Do want to selecet another Team meamber?',
+         choices: ['Yes', 'No'],
+         default: 'Yes',
+         name: 'finish',
+       },
+    ])
+    .then((answer) => {
+      if(answer.finish == 'No')
+      {
+        var teamHtml;
 
+        for (let i of TeamMembersHTMLCard) {
+          teamHtml += i ;
+         }
+         const htmlPageContent = generateHTML(teamHtml);
+         fs.writeFile('indexTeam.html', htmlPageContent, (err) =>
+        err ? console.log(err) : console.log('Successfully created index.html!')
+          );
+         console.log(teamHtml);
+        console.log("Done...");
+
+      }
+      else
+      { 
+        SelectTypeTeamMember();
+      }
+
+    });
+  }
+     
+  const SelectTypeTeamMember = () => {
+    inquirer
+      .prompt([
+        {
+          type: 'list',
+          message: 'What time Team member?',
+          choices: ['Engineer', 'Intern'],
+          default: 'Engineer',
+          name: 'TeamType',
+        },
+      ])
+      .then((answer) => {
+        switch(answer.TeamType)
+        {
+           case 'Engineer':
+             // code block
+             selectEngineer();
+
+          // console.log(TeamMembersHTMLCard);
+             break;
+           case 'Intern':
+             // code block
+             selectIntern();
+             break;
+           default:
+             // code block
+         }
+
+      });
+ 
+    }
+
+    const selectEngineer= () => {
+      inquirer
+      .prompt([
+        {
+          type: 'input',
+          name: 'engineerName',
+          message:  "What is your team engineer's name?",
+        },
+        {
+          type: 'input',
+          name: 'engineerEmployeeId',
+          message: "What is your engineer's Id?",
+        },
+        {
+          type: 'input',
+          name: 'engineeremail',
+          message: "What is your engineer's email address?",
+        },
+        {
+          type: 'input',
+          name: 'engineerGitHubUsername',
+          message: "What is engineer's GitHub username?",
+        },
+      ])
+        .then((answer) => {
+          console.log(answer);
+            const engineer = new Engineer(answer.engineerName,answer.engineerEmployeeId,answer.engineeremail,answer.engineerGitHubUsername);
+            console.log(answer.engineerName);
+            TeamMembersHTMLCard.push(
+            `<div class="card col-12 col-sm-4 mt-3">
+            <div class="card-header bg-primary">
+            <h2>${engineer.name}</h2>
+            <i class="fas fa-glasses"> Engineer</i>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item">ID:3</li>
+                    <li class="list-group-item">Email: <a href="mailto:${engineer.email}?subject=Contact Engineer">${engineer.email}</a></li>
+                    <li class="list-group-item">Github: <a href="https://github.com/${engineer.githubusername}">${engineer.githubusername}</a> </li>
+                  </ul>
+            </div>
+        </div>`)
+        SelectTeam();
+        });
+      }
+
+      const selectIntern= () => {
+        inquirer
+        .prompt([
+          {
+            type: 'input',
+            name: 'internName',
+            message:  "What is your team intern's name?",
+          },
+          {
+            type: 'input',
+            name: 'internEmployeeId',
+            message: "What is your intern's Id?",
+          },
+          {
+            type: 'input',
+            name: 'internemail',
+            message: "What is your intern's email address?",
+          },
+          {
+            type: 'input',
+            name: 'internschool',
+            message: "What is intern's school?",
+          },
+        ])
+          .then((answer) => {
+            console.log(answer);
+              const intern = new Intern(answer.internName,answer.internEmployeeId,answer.internemail,answer.internschool);
+              console.log(answer.internschool);
+              TeamMembersHTMLCard.push(
+              `<div class="card col-12 col-sm-4 mt-3">
+              <div class="card-header bg-primary">
+              <h2>${intern.name}</h2>
+              <i class="fas fa-user-graduate"> Intern</i>
+              </div>
+              <div class="card-body">
+                  <ul class="list-group">
+                      <li class="list-group-item">ID: ${intern.id}</li>
+                      <li class="list-group-item">Email: <a href="mailto:${intern.email}?subject=Contact Intern">${intern.email}</a></li>
+                      <li class="list-group-item">School:${intern.school} </li>
+                    </ul>
+              </div>
+          </div>`)
+          SelectTeam();
+          });
+        }
+
+getManager();
 
 // Function call to initialize app
 //init();
