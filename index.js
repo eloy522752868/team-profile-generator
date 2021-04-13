@@ -1,101 +1,109 @@
 //modified by: Eloy Gonzalez
 //modified date: 04/08/2021
 //Include packages needed for this application
-const generateMarkdownfunc = require('./utils/generateMarkdown');
+const Engineer = require('./assets/lib/Engineer');
+const Intern = require('./assets/lib/Intern');
+const Manager = require('./assets/lib/Manager');
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-//Create an array of questions for user input and  rename our destructured properties like so
-const questions = [
-   "What is your Github username?",
-   "What is your email address?",
-   "What is your project's name?",
-   "Please write a short description of your project?",
-   "What kind of license should your project have?",
-   "What command should be run to install dependencies?",
-   "What command should be run to run tests?",
-   "What does the user need to know about using the repo?",
-   "What does the user need to know about contributing to the repo?"
-];
+var TeamMembersHTMLCard = [];
 
-
-//rename our destructured properties like so
-const [userName, email, projectName, shortDesc, license, installCommand, testCommand, userUse, userContribute] = questions
-
-
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) 
-{
-   const filename =  fileName ; 
-   fs.writeFile(filename,data, (err) =>
-     err ? console.log(err) : console.log('Success!'))
-}
-
-// TODO: Create a function to initialize app
-function init() {
+const generateHTML = (TeamMembersHTMLCard) =>
+  `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://kit.fontawesome.com/7e97b8e52c.js" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      
+      <title>Document</title>
+  </head>
+  <body>
+      <!-- As a link -->
+          <div class="card">
+              <div class="card-header pt-5  text-center bg-danger">
+               <h1>My Team</h1>
+              </div>
   
-//adding prompt user input
-    const [userName, email, projectName, shortDesc, license, installCommand, testCommand, userUse, userContribute] = questions
+         
+              <div class="container">
+                  <div class="row">
+                  ${TeamMembersHTMLCard[0]}
+                  </div>
+              </div>
+          </div>
+  </body>
+  </html>`;
+//Create an array of questions for user input and  rename our destructured properties like so
+const questionsManager = [
+    "What is your team manager’s name?",
+    "What is your employee Id?",
+    "What is your email address?",
+    "What is your office number?"
+ ];
+ //rename our destructured properties like so
+const [managerName,managerEmployeeId, manageremail, managerOfficeNumber] = questionsManager 
 
-   inquirer
-   .prompt([
-     {
-       type: 'input',
-       name: 'userName',
-       message: userName,
-     },
-     {
+inquirer
+  .prompt([
+    {
       type: 'input',
-      name: 'email',
-      message: email,
+      name: 'managerName',
+      message: managerName,
     },
     {
       type: 'input',
-      name: 'projectName',
-      message: projectName,
+      name: 'managerEmployeeId',
+      message: managerEmployeeId,
     },
     {
       type: 'input',
-      name: 'shortDesc',
-      message: shortDesc,
-    },
-     {
-      type: 'list',
-       message:  license,
-       choices: ['MIT', 'APACHE2.0', 'GPL3.0', 'None'],
-       default: 'MIT',
-       name: 'license',
-     },
-     {
-      type: 'input',
-      name: 'installCommand',
-      default: 'npm i',
-      message: installCommand,
+      name: 'manageremail',
+      message: manageremail,
     },
     {
       type: 'input',
-      name: 'testCommand',
-      default: 'npm test',
-      message: testCommand,
+      name: 'managerOfficeNumber',
+      message: managerOfficeNumber,
     },
-    {
-      type: 'input',
-      name: 'userUse',
-      message: userUse,
-    },
-    {
-      type: 'input',
-      name: 'userContribute',
-      message: userContribute,
-    },
-   ])
-   .then((data) => {
-       
-  // Using the file system module to read and write the README.md file, I calling the file GENERATED-README.md.
-     writeToFile("GENERATED-README.md",generateMarkdownfunc(data))
-   });
+  ])
+  .then((answers) => {
+      console.log(answers)
+    const manager = new Manager(answers.managerName,answers.managerEmployeeId,answers.manageremail,answers.managerOfficeNumber);
+    console.log(manager.name);
+    TeamMembersHTMLCard.push(
+    `<div class="card col-12 col-sm-4 mt-3">
+    <div class="card-header bg-primary">
+    <h2>${manager.name}</h2>
+    <i class="fas fa-mug-hot"> Manager</i>
+    </div>
+    <div class="card-body">
+        <ul class="list-group">
+            <li class="list-group-item">ID:${manager.id}</li>
+            <li class="list-group-item">Email: <a href="mailto:${manager.email}?subject=Contact Engineer">${manager.email}</a></li>
+            <li class="list-group-item">Office number:${manager.officeNumber}</li>
+          </ul>
+    </div>
+    </div>`
+    )
+    console.log(TeamMembersHTMLCard);
+    const htmlPageContent = generateHTML(TeamMembersHTMLCard);
 
- }
+    fs.writeFile('indexTeam.html', htmlPageContent, (err) =>
+      err ? console.log(err) : console.log('Successfully created index.html!')
+    );
+   // const htmlPageContent = generateHTML(answers);
+
+   // fs.writeFile('index.html', htmlPageContent, (err) =>
+   //   err ? console.log(err) : console.log('Successfully created index.html!')
+   // );
+  });
+
+
 
 // Function call to initialize app
-init();
+//init();
