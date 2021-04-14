@@ -5,7 +5,7 @@ On this project I was tasked to build a Node.js command-line application that ta
 
 ## Screenshots of Team  generation site and test
 
-### Start prompt input to generate file
+### Start prompt input to generate file and testing successfully
 
 ![Imput & Test run](./assets/images/Nodejspromttest.png)
 
