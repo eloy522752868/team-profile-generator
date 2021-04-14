@@ -1,9 +1,8 @@
 //modified by: Eloy Gonzalez
 //modified date: 04/12/2021
 //Include Test needed Intern
+/*This test create a new Intern -  add the information to build the html card array.*/
 const Intern = require('../lib/Intern');
-
-// This test create a new Intern -  add the information to build the html card array.
 
 describe('Intern', () => {
 

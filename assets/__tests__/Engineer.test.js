@@ -2,9 +2,9 @@
 //modified by: Eloy Gonzalez
 //modified date: 04/12/2021
 //Include Test needed Engineer
-const Engineer = require('../lib/Engineer');
+/*This test create a new Engineer -  add the information to build the html card array.*/
 
-// Thist test create a new Engineer -  add the information to build the html card array.
+const Engineer = require('../lib/Engineer');
 
 describe('Engineer', () => {
     it('should create a new Employee class ', () => {

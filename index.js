@@ -128,7 +128,7 @@ const SelectTeam = () => {
 
          }
          const htmlPageContent = generateHTML(teamHtml);
-         fs.writeFile('index.html', htmlPageContent, (err) =>
+         fs.writeFile('./assets/dist/index.html', htmlPageContent, (err) =>
         err ? console.log(err) : console.log('Successfully created index.html!')
           );
         console.log("Done...");

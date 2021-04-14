@@ -1,9 +1,8 @@
 //modified by: Eloy Gonzalez
 //modified date: 04/12/2021
 //Include Test needed Manager
+/* This test create a new Manager -  add the information to build the html card array.*/
 const Manager = require('../lib/Manager');
-
-// This test create a new Manager -  add the information to build the html card array.
 
 describe('Manager', () => {
     it('should create a new Manager class', () => {

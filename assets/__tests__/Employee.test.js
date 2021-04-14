@@ -2,14 +2,15 @@
 //modified by: Eloy Gonzalez
 //modified date: 04/12/2021
 //Include Test needed Employee
+/*How do I test this change?  When I create a new manager , Engineer , Intern , 
+I want to see that object created, and I want to make sure it's added to the array.*/
+
 
 const Employee = require('../lib/Employee');
 const Manager = require('../lib/Manager');
 const Engineer = require('../lib/Engineer');
 const Intern = require('../lib/Intern');
 
-
-// What does this test need to do - When I create a new manager , Engineer , Intern , I want to see that object created, and I want to make sure it's added to the array.
 
 describe('Employee', () => {
     it('should create a new Employee class', () => {
