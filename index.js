@@ -90,7 +90,7 @@ inquirer
         <ul class="list-group">
             <li class="list-group-item">ID:${manager.id}</li>
             <li class="list-group-item">Email: <a href="mailto:${manager.email}?subject=Contact Manager">${manager.email}</a></li>
-            <li class="list-group-item">Office number: ${manager.officeNumber}</li>
+            <li class="list-group-item">Office number: ${manager.officeNumber1}</li>
           </ul>
     </div>
     </div>`
