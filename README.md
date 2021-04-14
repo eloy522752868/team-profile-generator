@@ -7,11 +7,11 @@ On this project I was tasked to build a Node.js command-line application that ta
 
 ### Start prompt input to generate file
 
-![Imput & Test run](./assets/images/teamgeneratedsite.png)
+![Imput & Test run](./assets/images/Nodejspromttest.png)
 
 ### Generated HTML
 
-![Team Site](./assets/images/teamprofilegeneration.png)
+![Team Site](./assets/images/teamgeneratedsite.png)
 ### Deployed Site Details
 
 Link to readme file below:
